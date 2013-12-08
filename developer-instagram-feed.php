@@ -61,11 +61,6 @@ License: MIT
 		add_action('admin_enqueue_scripts', array($developer_instagram_feed, 'admin_script'));
 
 		function DIF_get_user_images($user_id = null, $count = null) {
-			if(!isset($user_id)) {
-				$user = wp_get_current_user();
-				$user_id = $user->ID;
-			}
-
 			$developer_instagram_feed = new ia_Developer_Instagram_Feed();
 
 			$images = $developer_instagram_feed->get_images($user_id, $count);

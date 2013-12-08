@@ -127,14 +127,14 @@
 							}
 
 							//display authorization code in disabled input
-							$output .= '			<input data-username="' . $user_name . '" type="text" name="access_token" id="access_token" id="access_token" value="' . $value . '" disabled />';
+							$output .= '			Authorized<br /><span class="description"><a href="' . $this->urls['revoke'] . '" target="_blank">Revoke access</a></span>';
 						//if we haven't received one
 						} else {
 							//display check box allowing user to save profile and then authorize Instagram API
 							$output .= '			<input type="checkbox" name="authorized" value="1" id="authorized" /> <label for="authorized">Authorize API Access</label>';
 
 							if($auth_test !== -1) {
-								$output .= '			<br /><span class="description">Your access token is no longer validated, please re-authorize this API integration.</span>';
+								$output .= '			<br /><span class="description">Your access token is no longer valid, please re-authorize this API integration.</span>';
 							}
 						}
 
@@ -168,6 +168,11 @@
 
 			//get user images from API
 			public function get_images($user_id, $count = null) {
+				if(!$user_id) {
+					global $post;
+					$user_id = $post->post_author;
+				}
+
 				if(!isset($count)) {
 					$count = $this->settings['number_of_photos'];
 				}
@@ -184,10 +189,44 @@
 						)
 					);
 
-					return $images;
+					$return_array = $this->convert_array($images);
+
+					return $return_array;
 				} else {
 					return false;
 				}
+			}
+
+			//format returned image object
+			private function convert_array($images = null) {
+				$instagram_feed = array();
+
+				if(isset($images)) {
+					foreach($images as $key => $image_data) {
+						$instagram_feed[$key] = array(
+							'type' => $image_data->getType(),
+							'location' => $image_data->getLocation(),
+							'filter' => $image_data->getFilter(),
+							'created_time' => $image_data->getCreatedTime(),
+							'link' => $image_data->getLink(),
+							'image' => array(
+								'thumb' => $image_data->getThumbnail(),
+								'low_resolution' => $image_data->getLowResImage(),
+								'standard_resolution' => $image_data->getStandardResImage()
+							),
+							'video' => array(
+								'low_resolution' => $image_data->getLowResVideo(),
+								'standard_resolution' => $image_data->getStandardResVideo()
+							)
+						);
+
+						$caption = $image_data->getCaption();
+
+						$instagram_feed[$key]['caption'] = $caption->getText();
+					}
+				}
+
+				return $instagram_feed;
 			}
 
 			//settings page
@@ -232,7 +271,7 @@
 						$output .= '	<div class="error"><p>' . __('Could not store') .  ' client_id</p></div>';
 					}
 
-					$output .= '	<p>' . __('Please') . ' <a href="http://instagram.com/developer/clients/manage/" target="_blank">' . __('create an Instagram API Client') . '</a> ' . __('using the following redirect URL') . ': <strong>' . $this->settings['redirect_url'] . '</strong></p>';
+					$output .= '	<p>' . __('Please') . ' <a href="' . $this->urls['client_id'] . '" target="_blank">' . __('create an Instagram API Client') . '</a> ' . __('using the following redirect URL') . ': <strong>' . $this->settings['redirect_url'] . '</strong></p>';
 					$output .= '	<form method="post">';
 						$output .= '		<label for="client_id">Client ID&nbsp;&nbsp;<input type="text" name="client_id" id="client_id" value="' . $this->settings['client_id'] . '" /></label><br />';
 						$output .= '		<label for="client_secret">Client Secret&nbsp;&nbsp;<input type="text" name="client_secret" id="client_secret" value="' . $this->settings['client_secret'] . '" /></label><br />';

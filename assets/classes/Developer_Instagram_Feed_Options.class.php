@@ -5,6 +5,11 @@
 		//options for our plug-in
 		class ia_Developer_Instagram_Feed_Options {
 
+			public $urls = array(
+				'client_id' => 'http://instagram.com/developer/clients/manage/',
+				'revoke' => 'https://instagram.com/accounts/manage_access'
+			);
+
 			//IMPORTANT: Update the version number here whenever you release a new version
 			protected $v_num = '0.0.1';
 

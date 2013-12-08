@@ -18,7 +18,13 @@ require_once DEVELOPER_INSTAGRAM_FEED_DIR . '/assets/classes/Instagram/Net/CurlC
 
 require_once DEVELOPER_INSTAGRAM_FEED_DIR . '/assets/classes/Instagram/Collection/CollectionAbstract.php';
 require_once DEVELOPER_INSTAGRAM_FEED_DIR . '/assets/classes/Instagram/Collection/MediaCollection.php';
+require_once DEVELOPER_INSTAGRAM_FEED_DIR . '/assets/classes/Instagram/Collection/LocationCollection.php';
+require_once DEVELOPER_INSTAGRAM_FEED_DIR . '/assets/classes/Instagram/Collection/MediaSearchCollection.php';
+require_once DEVELOPER_INSTAGRAM_FEED_DIR . '/assets/classes/Instagram/Collection/UserCollection.php';
+require_once DEVELOPER_INSTAGRAM_FEED_DIR . '/assets/classes/Instagram/Collection/CommentCollection.php';
+require_once DEVELOPER_INSTAGRAM_FEED_DIR . '/assets/classes/Instagram/Collection/TagCollection.php';
 require_once DEVELOPER_INSTAGRAM_FEED_DIR . '/assets/classes/Instagram/Collection/TagMediaCollection.php';
+require_once DEVELOPER_INSTAGRAM_FEED_DIR . '/assets/classes/Instagram/Collection/LikedMediaCollection.php';
 
 require_once DEVELOPER_INSTAGRAM_FEED_DIR . '/assets/classes/Instagram/Net/ApiResponse.php';
 
