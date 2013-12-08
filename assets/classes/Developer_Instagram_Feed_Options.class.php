@@ -11,7 +11,7 @@
 			);
 
 			//IMPORTANT: Update the version number here whenever you release a new version
-			protected $v_num = '0.0.1';
+			protected $v_num = '0.0.2';
 
 			//prefix for option names, table names, and capability names
 			protected $prefix = 'dev_instagram_feed_';
