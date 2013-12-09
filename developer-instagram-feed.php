@@ -3,7 +3,7 @@
 Plugin Name: Developer Instagram Feed
 Plugin URI: http://www.example.com/plug-in-name/
 Description: Allows developers to easily connect to the Instagram API and provides functions for retrieving a user's photos. It only returns JSON so developers can style the feed as they wish.
-Version: 0.0.2
+Version: 0.0.3
 Author: Eric Allen
 Author URI: http://www.internetalche.me/
 License: MIT
@@ -45,6 +45,7 @@ License: MIT
 	======================================================= */
 
 	if(class_exists('ia_Developer_Instagram_Feed')) {
+		$developer_instagram_feed = new ia_Developer_Instagram_Feed();
 
 		register_activation_hook(__FILE__, array($developer_instagram_feed, 'activate'));
 
@@ -58,12 +59,10 @@ License: MIT
 
 		add_action('personal_options_update', array($developer_instagram_feed, 'profile_auth'));
 
-		add_action('admin_enqueue_scripts', array($developer_instagram_feed, 'admin_script'));
-
-		function DIF_get_user_images($user_id = null, $count = null) {
+		function DIF_get_user_images($user_id = null) {
 			$developer_instagram_feed = new ia_Developer_Instagram_Feed();
 
-			$images = $developer_instagram_feed->get_images($user_id, $count);
+			$images = $developer_instagram_feed->get_images($user_id);
 
 			return $images;
 		}

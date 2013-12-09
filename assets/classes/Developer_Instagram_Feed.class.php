@@ -55,14 +55,6 @@
 				add_options_page(__('Developer Instagram Feed'), __('Developer Instagram Feed'), $this->caps['activate_plugins'][0], 'developer-instagram-feed.php', array($this, 'settings_page'));
 			}
 
-			//JS for admin
-			public function admin_script($hook_suffix) {
-				if($hook_suffix == 'profile.php') {
-					wp_register_script($this->fix_name('admin'), DEVELOPER_INSTAGRAM_FEED_DIR . '/assets/js/developer-instagram-feed-admin.min.js', array('jquery'), '0.0.1', true);
-					wp_enqueue_script($this->fix_name('admin'));
-				}
-			}
-
 			//add Instagram contact method if needed
 			public function contact_method($contactmethods) {
 				//check to see if admin has set custom instagram contact method field
@@ -127,7 +119,7 @@
 							}
 
 							//display authorization code in disabled input
-							$output .= '			Authorized<br /><span class="description"><a href="' . $this->urls['revoke'] . '" target="_blank">Revoke access</a></span>';
+							$output .= '			Authorized<br /><span class="description"><a href="' . $this->urls['revoke'] . '">Revoke Access</a></span>';
 						//if we haven't received one
 						} else {
 							//display check box allowing user to save profile and then authorize Instagram API
@@ -173,23 +165,45 @@
 					$user_id = $post->post_author;
 				}
 
-				if(!isset($count)) {
-					$count = $this->settings['number_of_photos'];
+				if(!$count) {
+					$count = (int) $this->settings['number_of_photos'];
 				}
 
 				$token = get_user_meta($user_id, $this->fix_name('authorized'), true);
 
 				if($token) {
-					$instagram = new Instagram\Instagram;
-					$instagram->setAccessToken($token);
-					$current_user = $instagram->getCurrentUser();
-					$images = $current_user->getMedia(
-						array(
-							'count' => $count
-						)
-					);
+					$return_array = get_transient($this->fix_name('images_' . $user_id));
 
-					$return_array = $this->convert_array($images);
+					if(!$return_array) {
+						$instagram = new Instagram\Instagram;
+						$instagram->setAccessToken($token);
+						$current_user = $instagram->getCurrentUser();
+						$images = $current_user->getMedia(
+							array(
+								'count' => $count
+							)
+						);
+
+						$return_array = $this->convert_array($images);
+
+						if(count($return_array)) {
+							$short_term = (int) $this->settings['short_term_cache'];
+
+							delete_transient($this->fix_name('images_' . $user_id));
+
+							delete_transient($this->fix_name('images_' . $user_id . '_long'));
+
+							set_transient($this->fix_name('images_' . $user_id), $return_array, $short_term * 60 * 60);
+
+							set_transient($this->fix_name('images_' . $user_id . '_long'), $return_array, 84600);
+						} else {
+							$return_array = get_transient($this->fix_name('images_' . $user_id . '_long'));
+
+							if(!$return_array) {
+								$return_array = false;
+							}
+						}
+					}
 
 					return $return_array;
 				} else {
@@ -329,6 +343,7 @@
 					$output .= '	<form method="post">';
 						$output .= '		<label for="number_of_photos">Number of Photos&nbsp;&nbsp;<input type="number" name="number_of_photos" id="number_of_photos" value="' . $this->settings['number_of_photos'] . '" /></label><br />';
 						$output .= '		<label for="instagram_contact_method">Instagram Contact Method&nbsp;&nbsp;<input type="text" name="instagram_contact_method" id="instagram_contact_method" value="' . $this->settings['instagram_contact_method'] . '" /></label><br />';
+						$output .= '		<label for="short_term_cache">Cache Results for &nbsp;&nbsp;<input type="text" name="short_term_cache" id="short_term_cache" value="' . $this->settings['short_term_cache'] . '" />&nbsp;&nbsp;Hours</label><br />';
 						$output .= '		' . wp_nonce_field($this->fix_name('save_settings'), '_wpnonce', true, false);
 						$output .= '		<input type="submit" name="submit" value="Save" />';
 					$output .= '	</form>';

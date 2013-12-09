@@ -3,7 +3,7 @@ Contributors: ericrallen
 Tags: instagram, developer
 Requires at least: 3.6.1
 Tested up to: 3.7.1
-Stable tag: 0.0.2
+Stable tag: 0.0.3
 License: MIT
 License URI: http://opensource.org/licenses/mit-license.php
 
@@ -19,7 +19,17 @@ That's why we built this one. You set up an Instagram API Client for your WordPr
 
 == Options ==
 
+On the plugin's settings page you can set how many images the user's Instagram feed pulls in and how many hours the feed should be cached for. There is a backup transient cache that lasts 24 hours that will pull in if the cache is not available and the Instagram API is unavailable.
 
+You can pass a user ID into the `DIF_get_user_images()` function, or you can let it pull in the current $post object's author ID.
+
+This plugin also adds an Instagram contact method to user profiles. If your site already has an Instagram contact method, you can change the value in the plugin's settings page to the name of the contact method field that already exits and this plugin will not add another Instagram contact method.
+
+== Screenshots ==
+
+1. The plugin Client ID registration page
+2. The plugin's settings page
+3. The user profile after authentication
 
 == Installation ==
 
@@ -34,9 +44,12 @@ That's why we built this one. You set up an Instagram API Client for your WordPr
 
 == Frequently Asked Questions ==
 
-
+This plugin has not yet been tested with a multi-site installation.
 
 == Changelog ==
+
+= 0.0.3 =
+* Updated some logic and added better readme and screenshots.
 
 = 0.0.2 =
 * Updated `DIF_get_user_images()` function to format Instagram informaiton in a more easily accessible format.
@@ -46,3 +59,4 @@ That's why we built this one. You set up an Instagram API Client for your WordPr
 
 == Support ==
 
+Feel free to fill out a [GitHub Issue](https://github.com/ericrallen/developer-instagram-feed-wp/issues) or post on the support forums.

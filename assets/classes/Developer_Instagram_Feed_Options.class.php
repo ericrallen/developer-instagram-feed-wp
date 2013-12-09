@@ -11,7 +11,7 @@
 			);
 
 			//IMPORTANT: Update the version number here whenever you release a new version
-			protected $v_num = '0.0.2';
+			protected $v_num = '0.0.3';
 
 			//prefix for option names, table names, and capability names
 			protected $prefix = 'dev_instagram_feed_';
@@ -45,7 +45,8 @@
 						'client_secret' => '',
 						'redirect_url' => get_admin_url() .  'profile.php',
 						'number_of_photos' => 8,
-						'instagram_contact_method' => 'iainstagram'
+						'instagram_contact_method' => 'iainstagram',
+						'short_term_cache' => 1
 					)
 				);
 			}
