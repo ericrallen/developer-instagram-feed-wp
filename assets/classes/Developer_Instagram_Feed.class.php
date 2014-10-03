@@ -203,8 +203,8 @@
 			}
 
 			//get images for hashtag
-			public function get_hashtag($tag = null, $count = null) {
-				if(!$tag) {
+			public function get_hashtag($tag = null, $user_id = null, $count = null) {
+				if(!$tag || !$user_id) {
 					return false;
 				} else {
 					if(!$count || !is_integer($count)) {

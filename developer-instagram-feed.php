@@ -65,10 +65,10 @@ License: MIT
 			return $images;
 		}
 
-		function DIF_get_hashtag_images($hashtag = null, $count = null) {
+		function DIF_get_hashtag_images($hashtag = null, $authorized_user = null, $count = null) {
 			$developer_instagram_feed = new ia_Developer_Instagram_Feed();
 
-			$images = $developer_instagram_feed->get_hashtag($user_id, $count);
+			$images = $developer_instagram_feed->get_hashtag($hashtag, $authorized_user, $count);
 
 			return $images;
 		}
