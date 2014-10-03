@@ -20,4 +20,4 @@ Using the Plugin
 2.  Go to the Settings->Developer Instagram Feed page and follow the instructions for setting up your Instagram API Client
 3.  Set the number of images and the cache timeout for the plugin after storing your API credentials
 4.  Have your users login and authorize your Instagram API Client via their WordPress Profile Page
-5.  Use the `DIF_get_user_images($user_id)` function to retrieve a user's images from the Instagram API, or use the `DIF_get_hashtag_images($tag)` function to retrieve images from the Instagram API based on a hashtag. Here's a [gist](https://gist.github.com/ericrallen/8393004) to help you get started.
+5.  Use the `DIF_get_user_images($user_id)` function to retrieve a user's images from the Instagram API, or use the `DIF_get_hashtag_images($tag, $user_id)` function to retrieve images from the Instagram API based on a hashtag (you need to provide the WordPress ID of a user who has authorized with the API integration to pull in hashtagged images). Here's a [gist](https://gist.github.com/ericrallen/8393004) to help you get started.
