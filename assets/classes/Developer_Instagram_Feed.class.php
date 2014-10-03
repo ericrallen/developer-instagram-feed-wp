@@ -66,10 +66,10 @@
 					$instagram->setAccessToken($authorized);
 					$auth_test = $instagram->getCurrentUser();
 
-					$user_name = $auth_test->data->username;
+					$user_name = $auth_test->getUserName();
 				} else {
 					$auth_test = -1;
-					$user_name = '';
+					$user_name = 'No User Found';
 				}
 
 				//add section to profile page
@@ -110,7 +110,7 @@
 							}
 
 							//display authorization code in disabled input
-							$output .= '			Authorized<br /><span class="description"><a href="' . $this->urls['revoke'] . '">Revoke Access</a></span>';
+							$output .= '			Authorized as ' . $user_name . '<br /><span class="description"><a href="' . $this->urls['revoke'] . '">Revoke Access</a></span>';
 						//if we haven't received one
 						} else {
 							//display check box allowing user to save profile and then authorize Instagram API
