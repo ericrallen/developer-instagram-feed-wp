@@ -3,7 +3,7 @@ Contributors: ericrallen
 Tags: instagram, developer
 Requires at least: 3.6.1
 Tested up to: 3.7.1
-Stable tag: 0.0.3
+Stable tag: 0.0.4
 License: MIT
 License URI: http://opensource.org/licenses/mit-license.php
 

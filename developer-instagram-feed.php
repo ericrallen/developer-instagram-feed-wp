@@ -53,16 +53,22 @@ License: MIT
 
 		add_action('admin_menu', array($developer_instagram_feed, 'admin_menu'));
 
-		add_filter('user_contactmethods', array($developer_instagram_feed, 'contact_method'));
-
 		add_action('show_user_profile', array($developer_instagram_feed, 'profile_buttons'));
 
 		add_action('personal_options_update', array($developer_instagram_feed, 'profile_auth'));
 
-		function DIF_get_user_images($user_id = null) {
+		function DIF_get_user_images($user_id = null, $count = null) {
 			$developer_instagram_feed = new ia_Developer_Instagram_Feed();
 
-			$images = $developer_instagram_feed->get_images($user_id);
+			$images = $developer_instagram_feed->get_images($user_id, $count);
+
+			return $images;
+		}
+
+		function DIF_get_hashtag_images($hashtag = null, $count = null) {
+			$developer_instagram_feed = new ia_Developer_Instagram_Feed();
+
+			$images = $developer_instagram_feed->get_hashtag($user_id, $count);
 
 			return $images;
 		}

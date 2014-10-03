@@ -1,4 +1,4 @@
-developer-instagram-feed
+developer-instagram-feed v 0.0.4
 ================
 
 REQUIRES PHP 5.3+

@@ -34,6 +34,8 @@
 				$this->unset_options();
 
 				$this->remove_usermeta();
+
+				$this->remove_transients();
 			}
 
 			//get current options
@@ -53,17 +55,6 @@
 			public function admin_menu() {
 				//settings page
 				add_options_page(__('Developer Instagram Feed'), __('Developer Instagram Feed'), $this->caps['activate_plugins'][0], 'developer-instagram-feed.php', array($this, 'settings_page'));
-			}
-
-			//add Instagram contact method if needed
-			public function contact_method($contactmethods) {
-				//check to see if admin has set custom instagram contact method field
-				if($this->settings['instagram_contact_method'] === 'iainstagram') {
-					//add instagram contact method
-					$contactmethods['iainstagram'] = 'Instagram';
-
-					return $contactmethods;
-				}
 			}
 
 			public function profile_buttons($user) {
@@ -165,14 +156,14 @@
 					$user_id = $post->post_author;
 				}
 
-				if(!$count) {
+				if(!$count || !is_integer($count)) {
 					$count = (int) $this->settings['number_of_photos'];
 				}
 
 				$token = get_user_meta($user_id, $this->fix_name('authorized'), true);
 
 				if($token) {
-					$return_array = get_transient($this->fix_name('images_' . $user_id));
+					$return_array = get_transient($this->fix_name('images_' . $user_id . '_' . $count));
 
 					if(!$return_array) {
 						$instagram = new Instagram\Instagram;
@@ -189,15 +180,15 @@
 						if(count($return_array)) {
 							$short_term = (int) $this->settings['short_term_cache'];
 
-							delete_transient($this->fix_name('images_' . $user_id));
+							delete_transient($this->fix_name('images_' . $user_id . '_' . $count));
 
-							delete_transient($this->fix_name('images_' . $user_id . '_long'));
+							delete_transient($this->fix_name('images_' . $user_id . '_' . $count . '_long'));
 
-							set_transient($this->fix_name('images_' . $user_id), $return_array, $short_term * 60 * 60);
+							set_transient($this->fix_name('images_' . $user_id . '_' . $count), $return_array, $short_term * 60 * 60);
 
-							set_transient($this->fix_name('images_' . $user_id . '_long'), $return_array, 84600);
+							set_transient($this->fix_name('images_' . $user_id . '_' . $count . '_long'), $return_array, 84600);
 						} else {
-							$return_array = get_transient($this->fix_name('images_' . $user_id . '_long'));
+							$return_array = get_transient($this->fix_name('images_' . $user_id . '_' . $count . '_long'));
 
 							if(!$return_array) {
 								$return_array = false;
@@ -208,6 +199,58 @@
 					return $return_array;
 				} else {
 					return false;
+				}
+			}
+
+			//get images for hashtag
+			public function get_hashtag($tag = null, $count = null) {
+				if(!$tag) {
+					return false;
+				} else {
+					if(!$count || !is_integer($count)) {
+						$count = (int) $this->settings['number_of_photos'];
+					}
+
+					$token = get_user_meta($user_id, $this->fix_name('authorized'), true);
+
+					if($token) {
+						$return_array = get_transient($this->fix_name('images_' . $tag . '_' . $count));
+
+						if(!$return_array) {
+							$instagram = new Instagram\Instagram;
+							$instagram->setAccessToken($token);
+							$hashtag = $instagram->getTag($tag);
+							$images = $hashtag->getMedia(
+								array(
+									'count' => $count
+								)
+							);
+
+							$return_array = $this->convert_array($images);
+
+							if(count($return_array)) {
+								$short_term = (int) $this->settings['short_term_cache'];
+
+								delete_transient($this->fix_name('images_' . $tag . '_' . $count));
+
+								delete_transient($this->fix_name('images_' . $tag . '_' . $count . '_long'));
+
+								set_transient($this->fix_name('images_' . $tag . '_' . $count), $return_array, $short_term * 60 * 60);
+
+								set_transient($this->fix_name('images_' . $tag . '_' . $count . '_long'), $return_array, 84600);
+							} else {
+								$return_array = get_transient($this->fix_name('images_' . $tag . '_' . $count . '_long'));
+
+								if(!$return_array) {
+									$return_array = false;
+								}
+							}
+						}
+
+						return $return_array;
+					} else {
+						return false;
+					}
 				}
 			}
 
@@ -459,6 +502,20 @@
 						foreach($get_users as $user_id) {
 							delete_user_meta($user_id, $val);
 						}
+					}
+				}
+			}
+
+			private function remove_transients() {
+				$transient_like = fix_name('images_');
+
+				$query = "SELECT option_id FROM " . $this->db->options . " WHERE option_name LIKE '%" . $transient_link . "%';";
+
+				$get_transients = $this->db->get_results($query);
+
+				if($get_transients) {
+					foreach($get_transients as $option_id) {
+						$this->db->delete($this->db->options, array('option_id' => $option_id));
 					}
 				}
 			}
