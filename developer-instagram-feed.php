@@ -3,7 +3,7 @@
 Plugin Name: Developer Instagram Feed
 Plugin URI: http://www.example.com/plug-in-name/
 Description: Allows developers to easily connect to the Instagram API and provides functions for retrieving a user's photos. It only returns JSON so developers can style the feed as they wish.
-Version: 0.0.3
+Version: 0.0.5
 Author: Eric Allen
 Author URI: http://www.internetalche.me/
 License: MIT
